@@ -4,6 +4,7 @@
 //
 
 import java.util.*;
+import java.util.Scanner;
 
 public class Deck {
     public ArrayList<Card> ListaCard = new ArrayList(52);
@@ -75,121 +76,122 @@ public class Deck {
         Collections.shuffle(this.ListaCard);
         System.out.println("Se mezcló el Deck.");
         Iterator var1 = this.ListaCard.iterator();
-
-        while (var1.hasNext()) {
-            Card x = (Card) var1.next();
-            System.out.print(x);
-        }
-
-
         return null;
     }
 
-    public Object head() {
+    public Object head() throws Exception {
         System.out.println(this.ListaCard.get(0));
         System.out.println("Primer carta del Juego");
         this.ListaCard.remove(0);
         System.out.println("Quedan " + this.ListaCard.size() + " cartas en Deck.");
+        if (ListaCard.size() == 0) {
+            throw new Exception("Se han agotado las cartas");
+        }
         return null;
     }
 
-    public Object pick() {
-        Random random = new Random();
-        System.out.println(this.ListaCard.get(random.nextInt(this.ListaCard.size())));
+    public void pick() throws Exception {
+        Random random= new Random();
+        System.out.println(ListaCard.get(random.nextInt(ListaCard.size())));
         System.out.println("Seleccionamos una carta al azar");
-        this.ListaCard.remove(random.nextInt(this.ListaCard.size()));
-        System.out.println("Quedan " + this.ListaCard.size() + " cartas");
-        return null;
+        ListaCard.remove(random.nextInt(ListaCard.size()));
+        System.out.println("Quedan " + this.ListaCard.size() + " cartas en Deck.");
+        if (ListaCard.size() == 0) {
+            throw new Exception("Se han agotado las cartas");
+        }
     }
 
-    public Object hand() {
-        int i;
-        for (i = 0; i <= 4; ++i) {
-            System.out.println(this.ListaCard.get(i));
-        }
 
-        for (i = 0; i <= 4; ++i) {
-            this.ListaCard.remove(i);
+    public void hand() throws Exception {
+        if (  ListaCard.size()==0) {
+            throw new Exception("Se han agotado las cartas");
         }
-
-        System.out.println("Repartimos 5 cartas");
-        System.out.println("Quedan " + this.ListaCard.size() + " cartas");
-        return null;
+        for (int i = 0; i <= 4; i++) {
+            System.out.println(ListaCard.get(i));
+        }
+        for (int i = 0; i <= 4; i++){
+            for (i = 0; i <= 4; i++) {
+                ListaCard.remove(i);
+            }
+                System.out.println("Repartimos 5 cartas");
+                System.out.println("Quedan " + this.ListaCard.size() + " cartas en Deck.");
+            }
     }
 
-    //Metodo para cambiar cartas
-    public Object cambiar() {
-
-        int numC;
-        System.out.println("Cuantas cartas quieres del 1 al 5");
-        Scanner scanner = new Scanner(System.in);
-        int opcion = scanner.nextInt();
-
-        switch(opcion) {
-            case 1: {
-                for(numC = 0; numC <= 0; ++numC) {
-                    System.out.println(this.ListaCard.get(numC));
-                }
-                for(numC = 0; numC <= 0; ++numC) {
-                    this.ListaCard.remove(numC );
-                }
-                System.out.println("Quedan " + this.ListaCard.size() + " cartas");
-                break;
+        //Metodo para cambiar cartas
+        public Card[] cambiar(int numCartas) throws Exception {
+            if (numCartas > ListaCard.size()) {
+                throw new Exception("Se han agotado las cartas");
             }
-
-            case 2: {
-                for(numC = 0; numC <= 1; ++numC) {
-                    System.out.println(this.ListaCard.get(numC));
-                }
-                for(numC = 0; numC <= 1; ++numC) {
-                    this.ListaCard.remove(numC );
-                }
-                System.out.println("Quedan " + this.ListaCard.size() + " cartas");
-                break;
+            Card[] cambiar = new Card[numCartas];
+            for (int i = 0; i < 5; i++) {
+                cambiar[i] = ListaCard.remove(0);
             }
-
-            case 3: {
-                for(numC = 0; numC <= 2; ++numC) {
-                    System.out.println(this.ListaCard.get(numC));
-                }
-                for(numC = 0; numC <= 2; ++numC) {
-                    this.ListaCard.remove(numC );
-                }
-                System.out.println("Quedan " + this.ListaCard.size() + " cartas");
-                break;
-            }
-
-            case 4: {
-                for(numC = 0; numC <= 3; ++numC) {
-                    System.out.println(this.ListaCard.get(numC));
-                }
-
-                for(numC = 0; numC <= 3; ++numC) {
-                    this.ListaCard.remove(numC );
-                }
-                System.out.println("Quedan " + this.ListaCard.size() + " cartas");
-                break;
-            }
-
-            case 5: {
-                for(numC = 0; numC <= 4; ++numC) {
-                    System.out.println(this.ListaCard.get(numC));
-                }
-                for(numC = 0; numC <= 4; ++numC) {
-                    this.ListaCard.remove(numC );
-                }
-                System.out.println("Quedan " + this.ListaCard.size() + " cartas");
-                break;
-            }
-
-            default:{
-                System.out.println("No corresponde a ningun numero");
-            }
+            System.out.println("Se tomaron " + numCartas + " cartas del deck.");
+            System.out.println("Quedan " + this.ListaCard.size() + " cartas en Deck.");
+            return cambiar;
         }
 
-        return null;
+
+        public void mostrarMenu () throws Exception {
+
+            Scanner scanner = new Scanner(System.in);
+            int opcion = 0;
+            Deck deck = new Deck();
+            do {
+
+                System.out.println("Seleccionar una opcion:");
+                System.out.println("1. Para revolver las cartas");
+                System.out.println("2. Para sacar la primera carta.");
+                System.out.println("3. Para sacar una carta al azar.");
+                System.out.println("5. Para sacar cinco cartas al azar.");
+                System.out.println("5. Para elegir cuantas cartas quieres cambiar.");
+                System.out.println("6. Salir");
+                opcion = scanner.nextInt();
+                switch (opcion) {
+                    case 1:
+                        deck.shuflle();
+                        break;
+                    case 2:
+                        deck.head();
+                        break;
+                    case 3:
+                        deck.pick();
+                        break;
+                    case 4:
+                        deck.hand();
+                        break;
+                    case 5:
+                        System.out.println("¿Cuántas cartas desea tomar? (1-5)");
+                        int numCartas = scanner.nextInt();
+                        try {
+                            Card[] cambiar = deck.cambiar(numCartas);
+                            for (Card card : cambiar) {
+                                System.out.println(card);
+                            }
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
+                        break;
+                    case 6:
+                        System.out.println("Salir");
+                        break;
+                    default:
+                        System.out.println("Opción inválida, intente de nuevo.");
+                        break;
+                }
+
+            }
+            while (opcion != 0);
+
+            scanner.close();
+
+
+        }
     }
-}
+
+    
+
 
 
 
